@@ -5,6 +5,9 @@ mods/**/*.rds
 # ignore all _ folders but include _ files
 _*/
 
+# ignore .docx
+**/*.docx
+
 # History files
 .Rhistory
 .Rapp.history

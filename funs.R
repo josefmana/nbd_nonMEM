@@ -9,6 +9,9 @@ library(tidyverse)
 # takes any number and prints it as a character with specified number of decimals
 rprint <- function(x, dec = 2) sprintf( paste0( "%.", dec, "f" ), round( x , dec ) )
 
+# calculates min-max
+minmax <- function(x, dec = 2) paste0( rprint( min(x,na.rm=T),dec), "-", rprint( max(x,na.rm=T),dec ) )
+
 # takes any number and removes zero lead
 decimalcz <- function(x) gsub( ".", ",", x, fixed = T )
 

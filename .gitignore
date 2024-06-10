@@ -7,6 +7,7 @@ _*/
 
 # ignore .docx
 **/*.docx
+**/*.pdf
 
 # History files
 .Rhistory

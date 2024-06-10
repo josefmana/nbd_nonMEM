@@ -127,7 +127,7 @@ for ( i in 1:2 ) {
 }
 
 
-# CONFIRMATORY FACTOR ANALYSES ----
+# FACTOR ANALYSES ----
 
 # set-up models for each scoring type
 mod <-
@@ -136,25 +136,25 @@ mod <-
     
     `1` = '
     nonverbm =~ hs1_summ_1234 + hs1_summ_odd + ROCFT_Kopie + ROCFT_3 + ROCFT_30 + CMS_sum123 + CMS6_30min
-    language =~ BNT_kategor + BNT_fonem + kateg_sum
+    language =~ BNT_kategor + kateg_sum
     ToM =~ 1*ToM_sum
     ',
     
     `2` = '
     nonverbm =~ hs2_sumrot_1234 + hs2_sumrot_odd + ROCFT_Kopie + ROCFT_3 + ROCFT_30 + CMS_sum123 + CMS6_30min
-    language =~ BNT_kategor + BNT_fonem + kateg_sum
+    language =~ BNT_kategor + kateg_sum
     ToM =~ 1*ToM_sum
     ',
     
     `3` = '
     nonverbm =~ hs3_orig_1234 + hs3_orig_odd + ROCFT_Kopie + ROCFT_3 + ROCFT_30 + CMS_sum123 + CMS6_30min
-    language =~ BNT_kategor + BNT_fonem + kateg_sum
+    language =~ BNT_kategor + kateg_sum
     ToM =~ 1*ToM_sum
     ',
     
     `4` = '
     nonverbm =~ hs4_gestalt_1234 + hs4_gestalt_odd + ROCFT_Kopie + ROCFT_3 + ROCFT_30 + CMS_sum123 + CMS6_30min
-    language =~ BNT_kategor + BNT_fonem + kateg_sum
+    language =~ BNT_kategor + kateg_sum
     ToM =~ 1*ToM_sum
     '
     
@@ -162,7 +162,24 @@ mod <-
 
 # compute the CFAs
 CFA <- lapply( 1:length(mod), function(i) cfa( mod[[i]], data = d, estimator = "MLR" ) )
+sapply( 1:length(CFA), function(i) summary(CFA[[i]])$header$optim.converged ) # check convergence
 
-# check convergence
-sapply( 1:length(CFA), function(i) summary(CFA[[i]])$header$optim.converged ) # a-OK
+# write down RMSEAs spread
+write.table(
 
+  x = decimalcz( minmax( sapply( CFA, function(i) summary(i, fit.measures = T)[["fit"]][["rmsea"]] ) ) ),
+  file = here("tabs","rmsea.txt"),
+  col.names = F,
+  row.names = F,
+  quote = F
+
+)
+
+# compute EFAs as well
+EFA <- lapply(
+  
+  1:4,
+  function(i)
+    efa(data = d[ , c( v[ grepl( paste0("hs",i), v$variable ), "variable"], v[ grepl(1,v$data_set), "variable" ] )[-c(8,10)] ], nfactors = 1:5)
+  
+)

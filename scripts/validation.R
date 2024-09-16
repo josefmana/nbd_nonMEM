@@ -30,7 +30,7 @@ d <- d %>%
 n <- sapply( levels(d$source), function(i) as.character( nrow( d[ d$source == i, ] ) ) )
 
 # print it
-t.desc <-
+tab1 <-
   
   printab( v, d, "source", 2 ) %>%
   
@@ -47,7 +47,7 @@ t.desc <-
   rownames_to_column("Variable")
 
 # save it
-write.table( x = t.desc, file = here("tabs","data_description.csv"), sep = ";", row.names = F, quote = F )
+write.table( x = tab1, file = here("tabs","data_description.csv"), sep = ";", row.names = F, quote = F )
 
 
 # CORRELATION ANALYSES ----
@@ -66,6 +66,31 @@ corr <-
         adjust = "none"
       )
     
+  )
+
+
+## ---- plot ----
+
+# variables to use
+lab <- v[ v$variable %in% colnames( corr[[1]]$r )[ c(3:4,9:18,20,22:23) ], "label"]
+
+# plot it
+corr[[1]]$r[ c(3:4,9:18,20,22:23), c(3:4,9:18,20,22:23) ] %>%
+  
+  `colnames<-`(lab) %>%
+  `rownames<-`(lab) %>%
+  
+  corrplot(
+    type = "lower",
+    method = "square",
+    p.mat = corr[[1]]$p[ c(3:4,9:18,20,22:23), c(3:4,9:18,20,22:23) ] %>% `colnames<-`(lab) %>% `rownames<-`(lab),
+    insig = "blank",
+    tl.srt = 45,
+    tl.col = "black",
+    addCoef.col = "white",
+    addgrid.col = "grey",
+    col = COL1("YlGn"),
+    diag = F
   )
 
 # prepare a table with all the variables
@@ -125,6 +150,9 @@ for ( i in 1:2 ) {
   
   
 }
+
+
+#
 
 
 # FACTOR ANALYSES ----

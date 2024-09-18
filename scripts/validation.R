@@ -4,6 +4,8 @@ rm( list = ls() ) # clean environment
 
 # set-up libraries
 library(here)
+library(tidyverse)
+library(pwr)
 library(psych)
 library(corrplot)
 library(lavaan)
@@ -52,38 +54,58 @@ write.table( x = tab1, file = here("tabs","data_description.csv"), sep = ";", ro
 
 # CORRELATION ANALYSES ----
 
-# extract correlation matrices
-corr <-
+# 
+
+# list variables to be included in the validation correlation matrixes
+vars <- data.frame(
+
+  nam = c("hs2_sumrot_1234", "hs2_sumrot_odd", "ROCFT_Kopie", "ROCFT_3", "ROCFT_30", "CMS_1", "CMS_2", "CMS_3", "CMS_sum123", "CMS_5_pointer", "CMS_sum1235", "CMS6_30min", "BNT_kategor", "kateg_sum", "ToM_sum"),
+  lab = c("NP2 Pokus 1-4", "NP2 Odd. vyb.", "ROCFT kopie", "ROCFT 3", "ROCFT 30", "CMS 1", "CMS 2", "CMS 3", "CMS 1-3", "CMS 5", "CMS 1235", "CMS 30", "BNT kategor.", "Kat. fluence", "ToM")
+
+)
+
+# extract (partial) correlation matrices
+pcorr <- lapply(
   
-  lapply(
+  1:2,
+  function(i) list(
     
-    1:2,
-    function(i)
-      corr.test(
-        d[ , with( v , variable[ data_set %in% c( "both", paste0("Data set #",i) ) ] ) ],
-        method = "pearson",
-        use = "pairwise.complete.obs",
-        adjust = "none"
-      )
+    r = partial.r(
+
+      data = d[ d$source == paste0("Data set #",i), c(with( v , variable[ data_set %in% c( "both", paste0("Data set #",i) ) ] ), "vek_roky") ],
+      x = with( v , variable[ data_set %in% c( "both", paste0("Data set #",i) ) ] ),
+      y = "vek_roky",
+      use = "pairwise",
+      method = "pearson"
+
+    )
     
   )
+)
+
+# add p-values
+for (i in 1:2) pcorr[[i]]$p <- corr.p(
+  
+  r = pcorr[[i]]$r,
+  n = corr.test(d[ d$source == paste0("Data set #",i), with( v , variable[ data_set %in% c( "both", paste0("Data set #",i) ) ] ) ] )$n - 1, # n - 1 for one covariate
+  adjust = "none",
+  alpha = .05
+  
+)$p
 
 
 ## ---- plot ----
 
-# variables to use
-lab <- v[ v$variable %in% colnames( corr[[1]]$r )[ c(3:4,9:18,20,22:23) ], "label"]
-
 # plot it
-corr[[1]]$r[ c(3:4,9:18,20,22:23), c(3:4,9:18,20,22:23) ] %>%
+pcorr[[1]]$r[vars$nam, vars$nam] %>%
   
-  `colnames<-`(lab) %>%
-  `rownames<-`(lab) %>%
+  `colnames<-`(vars$lab) %>%
+  `rownames<-`(vars$lab) %>%
   
   corrplot(
     type = "lower",
-    method = "square",
-    p.mat = corr[[1]]$p[ c(3:4,9:18,20,22:23), c(3:4,9:18,20,22:23) ] %>% `colnames<-`(lab) %>% `rownames<-`(lab),
+    method = "color",
+    p.mat = pcorr[[1]]$p[vars$nam, vars$nam] %>% `colnames<-`(vars$lab) %>% `rownames<-`(vars$lab),
     insig = "blank",
     tl.srt = 45,
     tl.col = "black",

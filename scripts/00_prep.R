@@ -199,13 +199,13 @@ v <-
   
   # add rows for nonverbal memory test scores
   add_row( variable = "hs1_summ_1234", type = "cont", test = NA, label = "NP1 Pokus 1-4", .before = 1 ) %>%
-  add_row( variable = "hs1_summ_odd", type = "cont", test = NA, label = "NP1 Oddálené vybavení", .after = 1 ) %>%
+  add_row( variable = "hs1_summ_odd", type = "cont", test = NA, label = "NP1 Odd. vyb.", .after = 1 ) %>%
   add_row( variable = "hs2_sumrot_1234", type = "cont", test = NA, label = "NP2 Pokus 1-4", .after = 2 ) %>%
-  add_row( variable = "hs2_sumrot_odd", type = "cont", test = NA, label = "NP2 Oddálené vybavení", .after = 3 ) %>%
+  add_row( variable = "hs2_sumrot_odd", type = "cont", test = NA, label = "NP2 Odd. vyb.", .after = 3 ) %>%
   add_row( variable = "hs3_orig_1234", type = "cont", test = NA, label = "NP3 Pokus 1-4", .after = 4 ) %>%
-  add_row( variable = "hs3_orig_odd", type = "cont", test = NA, label = "NP3 Oddálené vybavení", .after = 5 ) %>%
+  add_row( variable = "hs3_orig_odd", type = "cont", test = NA, label = "NP3 Odd. vyb.", .after = 5 ) %>%
   add_row( variable = "hs4_gestalt_1234", type = "cont", test = NA, label = "NP4 Pokus 1-4", .after = 6 ) %>%
-  add_row( variable = "hs4_gestalt_odd", type = "cont", test = NA, label = "NP4 Oddálené vybavení", .after = 7 ) %>%
+  add_row( variable = "hs4_gestalt_odd", type = "cont", test = NA, label = "NP4 Odd. vyb.", .after = 7 ) %>%
   
   # add rows for Sadecka data set
   add_row( variable = "ROCFT_Kopie", type = "cont", test = "conv", label = "ROCFT kopie" ) %>%

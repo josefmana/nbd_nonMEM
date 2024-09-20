@@ -17,6 +17,17 @@ source("funs.R") # read in-house functions
 
 sapply( c("figs","tabs"), function(i) if( !dir.exists(i) ) dir.create(i) ) # prepare folders
 
+v1 <- subset(v, analysis == "selection") # variables for the selection analysis
+v2 <- v %>% mutate( analysis = if_else( grepl("NP2 ", label), "validation", analysis) ) %>% filter(analysis == "validation") # variables for the validation analysis
+
+# extract number of subjects
+n <- list(
+  
+  max = sapply( levels(d$source), function(i) as.character( nrow( d[ d$source == i, ] ) ) ),
+  cor = lapply( 1:2, function(i) corr.test(d[ d$source == paste0("Data set #",i), get( paste0("v",i) )$variable ] )$n )
+  
+)
+
 
 # DATA DESCRIPTION ----
 
@@ -24,12 +35,9 @@ sapply( c("figs","tabs"), function(i) if( !dir.exists(i) ) dir.create(i) ) # pre
 d <- d %>%
   
   mutate(
-    source = factor( source, levels = c("Sadecka","Validacni_studie"), labels = paste0("Data set #",1:2), ordered = T ),
+    source = factor( source, levels = c("Validacni_studie", "Sadecka"), labels = paste0("Data set #",1:2), ordered = T ),
     sex = factor( sex, levels = c("f","m"), ordered = T )
   )
-
-# extract number of subjects
-n <- sapply( levels(d$source), function(i) as.character( nrow( d[ d$source == i, ] ) ) )
 
 # print it
 tab1 <-
@@ -37,43 +45,79 @@ tab1 <-
   printab( v, d, "source", 2 ) %>%
   
   # ToM shinaningans (because it is in both data sets)
-  bind_rows( . , data.frame( .[ "ToM1", "Data set #1" ], .[ "ToM", "Data set #2" ] ) %>% `colnames<-`( paste0("Data set #",1:2) ) ) %>%
+  bind_rows( . , data.frame( .[ "ToM", "Data set #1" ], .[ "ToM1", "Data set #2" ] ) %>% `colnames<-`( paste0("Data set #",1:2) ) ) %>%
   filter( ! (rownames(.) %in% c("ToM","ToM1") ) ) %>%
   `rownames<-`( c( rownames(.)[1:(nrow(.)-1)], "ToM" ) ) %>%
-  slice( 1:17, n(), 18:(n()-1) ) %>%
+  slice( 1:27, n(), 28:(n()-1) ) %>%
   
   # finishing touches
   mutate( across( where(is.character), ~ ifelse( grepl("NA",.x), "-", .x ) ) ) %>%
   mutate( across( everything(), decimalcz ) ) %>%
-  rbind( N = n, . ) %>%
+  rbind( N = n$max, . ) %>%
   rownames_to_column("Variable")
 
 # save it
-write.table( x = tab1, file = here("tabs","data_description.csv"), sep = ";", row.names = F, quote = F )
+write.table(x = tab1, file = here("tabs","data_description.csv"), sep = ";", row.names = F, quote = F)
+
+
+# POWER ANALYSIS ----
+
+# pre-calculate Bonferroni adjusted p-values for each analysis
+pval <- list(
+  
+  unadjusted = c(.05, .05),
+  adjusted = sapply( 1:2, function(i) .05 / (nrow( subset( get( paste0("v",i) ), !grepl("NP",label) ) ) * (-i+3) ) )
+  # in the first case adjusting for 2 times number of comparisons because the decision is based on two measures
+  # in the seconf case, adjusting for the number of comparisons only because it will be evaluated for each variable separately
+  
+)
+
+# compute table of powers
+pwr_tab <- lapply(
+  
+  set_names(nm = c("selection", "validation"), x = 1:2), # selection (1) vs validation (2)
+  function(i)
+    
+    sapply(
+      
+      c("0.4","0.6","0.8"), # reasonably large correlations
+      function(r)
+        
+        sapply(
+          
+          names(pval), # adjusted vs unadjusted significance threshold
+          function(p)
+            
+            pwr.r.test(n = min(n$cor[[i]]), sig.level = pval[[p]][[i]], r = as.numeric(r), power = NULL )$power
+          
+        )
+    ) %>%
+    
+    t() %>%
+    as.data.frame() %>%
+    rownames_to_column("rho")
+
+) %>%
+  
+  do.call( rbind.data.frame, . ) %>%
+  mutate( analysis = strsplit(rownames(.), ".", fixed = T)[[1]][1], .after = rho)
+
+# save it
+write.table(x = pwr_tab, file = here("tabs","power_analysis.csv"), sep = ",", row.names = F, quote = F)
 
 
 # CORRELATION ANALYSES ----
 
-# 
-
-# list variables to be included in the validation correlation matrixes
-vars <- data.frame(
-
-  nam = c("hs2_sumrot_1234", "hs2_sumrot_odd", "ROCFT_Kopie", "ROCFT_3", "ROCFT_30", "CMS_1", "CMS_2", "CMS_3", "CMS_sum123", "CMS_5_pointer", "CMS_sum1235", "CMS6_30min", "BNT_kategor", "kateg_sum", "ToM_sum"),
-  lab = c("NP2 Pokus 1-4", "NP2 Odd. vyb.", "ROCFT kopie", "ROCFT 3", "ROCFT 30", "CMS 1", "CMS 2", "CMS 3", "CMS 1-3", "CMS 5", "CMS 1235", "CMS 30", "BNT kategor.", "Kat. fluence", "ToM")
-
-)
-
-# extract (partial) correlation matrices
+# extract (partial) correlation matrices (for both analyses at the same time)
 pcorr <- lapply(
   
-  1:2,
+  set_names(nm = c("selection", "validation"), x = 1:2), # selection (1) vs validation (2)
   function(i) list(
     
     r = partial.r(
 
-      data = d[ d$source == paste0("Data set #",i), c(with( v , variable[ data_set %in% c( "both", paste0("Data set #",i) ) ] ), "vek_roky") ],
-      x = with( v , variable[ data_set %in% c( "both", paste0("Data set #",i) ) ] ),
+      data = d[ d$source == paste0("Data set #",i), c(get( paste0("v",i) )$variable, "vek_roky") ],
+      x = get( paste0("v",i) )$variable,
       y = "vek_roky",
       use = "pairwise",
       method = "pearson"
@@ -87,25 +131,30 @@ pcorr <- lapply(
 for (i in 1:2) pcorr[[i]]$p <- corr.p(
   
   r = pcorr[[i]]$r,
-  n = corr.test(d[ d$source == paste0("Data set #",i), with( v , variable[ data_set %in% c( "both", paste0("Data set #",i) ) ] ) ] )$n - 1, # n - 1 for one covariate
+  n = n$cor[[i]] - 1, # n - 1 for one covariate
   adjust = "none",
   alpha = .05
   
 )$p
 
 
+## CRITERION SELECTION ----
+
+
+
+
 ## ---- plot ----
 
 # plot it
-pcorr[[1]]$r[vars$nam, vars$nam] %>%
+cp <- pcorr[[2]]$r[v2$variable, v2$variable] %>%
   
-  `colnames<-`(vars$lab) %>%
-  `rownames<-`(vars$lab) %>%
+  `colnames<-`(v2$label) %>%
+  `rownames<-`(v2$label) %>%
   
   corrplot(
     type = "lower",
     method = "color",
-    p.mat = pcorr[[1]]$p[vars$nam, vars$nam] %>% `colnames<-`(vars$lab) %>% `rownames<-`(vars$lab),
+    p.mat = pcorr[[2]]$p[v2$variable, v2$variable] %>% `colnames<-`(v2$label) %>% `rownames<-`(v2$label),
     insig = "blank",
     tl.srt = 45,
     tl.col = "black",
@@ -114,6 +163,10 @@ pcorr[[1]]$r[vars$nam, vars$nam] %>%
     col = COL1("YlGn"),
     diag = F
   )
+
+# add correlation estimates for p > .05 cases
+with( subset(cp$corrPos, p.value > .05), text( x, y, round(corr,2), cex = .8 ) )
+
 
 # prepare a table with all the variables
 t.corr <-

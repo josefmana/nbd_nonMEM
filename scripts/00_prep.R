@@ -198,34 +198,53 @@ v <-
   add_column( label = c("VPaU 1-4","VPaU 30 min","Příběhy ok.","Příběhy 30 min","Pracovní pam.","Z-P vnímání","Orientace v P.","ToM") ) %>%
   
   # add rows for nonverbal memory test scores
-  add_row( variable = "hs1_summ_1234", type = "cont", test = NA, label = "NP1 Pokus 1-4", .before = 1 ) %>%
-  add_row( variable = "hs1_summ_odd", type = "cont", test = NA, label = "NP1 Odd. vyb.", .after = 1 ) %>%
-  add_row( variable = "hs2_sumrot_1234", type = "cont", test = NA, label = "NP2 Pokus 1-4", .after = 2 ) %>%
-  add_row( variable = "hs2_sumrot_odd", type = "cont", test = NA, label = "NP2 Odd. vyb.", .after = 3 ) %>%
-  add_row( variable = "hs3_orig_1234", type = "cont", test = NA, label = "NP3 Pokus 1-4", .after = 4 ) %>%
-  add_row( variable = "hs3_orig_odd", type = "cont", test = NA, label = "NP3 Odd. vyb.", .after = 5 ) %>%
-  add_row( variable = "hs4_gestalt_1234", type = "cont", test = NA, label = "NP4 Pokus 1-4", .after = 6 ) %>%
-  add_row( variable = "hs4_gestalt_odd", type = "cont", test = NA, label = "NP4 Odd. vyb.", .after = 7 ) %>%
+  add_row(variable = "hs1_summ_1", type = "cont", test = NA, label = "NP1 Pokus 1", .before = 1) %>%
+  add_row(variable = "hs1_summ_2", type = "cont", test = NA, label = "NP1 Pokus 2", .after = 1) %>%
+  add_row(variable = "hs1_summ_3", type = "cont", test = NA, label = "NP1 Pokus 3", .after = 2) %>%
+  add_row(variable = "hs1_summ_4", type = "cont", test = NA, label = "NP1 Pokus 4", .after = 3) %>%
+  add_row(variable = "hs1_summ_1234", type = "cont", test = NA, label = "NP1 Pokus 1-4", .after = 4) %>%
+  add_row(variable = "hs1_summ_odd", type = "cont", test = NA, label = "NP1 Odd. vyb.", .after = 5) %>%
+  
+  add_row(variable = "hs2_sumrot_1", type = "cont", test = NA, label = "NP2 Pokus 1", .after = 6) %>%
+  add_row(variable = "hs2_sumrot_2", type = "cont", test = NA, label = "NP2 Pokus 2", .after = 7) %>%
+  add_row(variable = "hs2_sumrot_3", type = "cont", test = NA, label = "NP2 Pokus 3", .after = 8) %>%
+  add_row(variable = "hs2_sumrot_4", type = "cont", test = NA, label = "NP2 Pokus 4", .after = 9) %>%
+  add_row(variable = "hs2_sumrot_1234", type = "cont", test = NA, label = "NP2 Pokus 1-4", .after = 10) %>%
+  add_row(variable = "hs2_sumrot_odd", type = "cont", test = NA, label = "NP2 Odd. vyb.", .after = 11) %>%
+  
+  add_row(variable = "hs3_orig_1", type = "cont", test = NA, label = "NP3 Pokus 1", .after = 12) %>%
+  add_row(variable = "hs3_orig_2", type = "cont", test = NA, label = "NP3 Pokus 2", .after = 13) %>%
+  add_row(variable = "hs3_orig_3", type = "cont", test = NA, label = "NP3 Pokus 3", .after = 14) %>%
+  add_row(variable = "hs3_orig_4", type = "cont", test = NA, label = "NP3 Pokus 4", .after = 15) %>%
+  add_row(variable = "hs3_orig_1234", type = "cont", test = NA, label = "NP3 Pokus 1-4", .after = 16) %>%
+  add_row(variable = "hs3_orig_odd", type = "cont", test = NA, label = "NP3 Odd. vyb.", .after = 17) %>%
+  
+  add_row(variable = "hs4_gestalt_1", type = "cont", test = NA, label = "NP4 Pokus 1", .after = 18) %>%
+  add_row(variable = "hs4_gestalt_2", type = "cont", test = NA, label = "NP4 Pokus 2", .after = 19) %>%
+  add_row(variable = "hs4_gestalt_3", type = "cont", test = NA, label = "NP4 Pokus 3", .after = 20) %>%
+  add_row(variable = "hs4_gestalt_4", type = "cont", test = NA, label = "NP4 Pokus 4", .after = 21) %>%
+  add_row(variable = "hs4_gestalt_1234", type = "cont", test = NA, label = "NP4 Pokus 1-4", .after = 22) %>%
+  add_row(variable = "hs4_gestalt_odd", type = "cont", test = NA, label = "NP4 Odd. vyb.", .after = 23) %>%
   
   # add rows for Sadecka data set
-  add_row( variable = "ROCFT_Kopie", type = "cont", test = "conv", label = "ROCFT kopie" ) %>%
-  add_row( variable = "ROCFT_3", type = "cont", test = "conv", label = "ROCFT 3" ) %>%
-  add_row( variable = "ROCFT_30", type = "cont", test = "conv", label = "ROCFT 30" ) %>%
-  add_row( variable = "CMS_1", type = "cont", test = "conv", label = "CMS 1" ) %>%
-  add_row( variable = "CMS_2", type = "cont", test = "conv", label = "CMS 2" ) %>%
-  add_row( variable = "CMS_3", type = "cont", test = "conv", label = "CMS 3" ) %>%
-  add_row( variable = "CMS_sum123", type = "cont", test = "conv", label = "CMS 1-3" ) %>%
-  add_row( variable = "CMS_5_pointer", type = "cont", test = "conv", label = "CMS 5" ) %>%
-  add_row( variable = "CMS_sum1235", type = "cont", test = "conv", label = "CMS 1235" ) %>%
-  add_row( variable = "CMS6_30min", type = "cont", test = "conv", label = "CMS 30" ) %>%
-  add_row( variable = "BNT_spont", type = "cont", test = "div", label = "BNT spont." ) %>%
-  add_row( variable = "BNT_kategor", type = "cont", test = "div", label = "BNT kategor." ) %>%
-  add_row( variable = "BNT_fonem", type = "cont", test = "div", label = "BNT fonem." ) %>%
-  add_row( variable = "kateg_sum", type = "cont", test = "div", label = "Kat. fluence" ) %>%
-  add_row( variable = "ToM_sum", type = "cont", test = "div", label = "ToM" )
+  add_row(variable = "ROCFT_Kopie", type = "cont", test = "conv", label = "ROCFT kopie") %>%
+  add_row(variable = "ROCFT_3", type = "cont", test = "conv", label = "ROCFT 3") %>%
+  add_row(variable = "ROCFT_30", type = "cont", test = "conv", label = "ROCFT 30") %>%
+  add_row(variable = "CMS_1", type = "cont", test = "conv", label = "CMS 1") %>%
+  add_row(variable = "CMS_2", type = "cont", test = "conv", label = "CMS 2") %>%
+  add_row(variable = "CMS_3", type = "cont", test = "conv", label = "CMS 3") %>%
+  add_row(variable = "CMS_sum123", type = "cont", test = "conv", label = "CMS 1-3") %>%
+  add_row(variable = "CMS_5_pointer", type = "cont", test = "conv", label = "CMS 5") %>%
+  add_row(variable = "CMS_sum1235", type = "cont", test = "conv", label = "CMS 1235") %>%
+  add_row(variable = "CMS6_30min", type = "cont", test = "conv", label = "CMS 30") %>%
+  add_row(variable = "BNT_spont", type = "cont", test = "div", label = "BNT spont.") %>%
+  add_row(variable = "BNT_kategor", type = "cont", test = "div", label = "BNT kategor.") %>%
+  add_row(variable = "BNT_fonem", type = "cont", test = "div", label = "BNT fonem.") %>%
+  add_row(variable = "kateg_sum", type = "cont", test = "div", label = "Kat. fluence") %>%
+  add_row(variable = "ToM_sum", type = "cont", test = "div", label = "ToM")
 
 # add a column with name for the finished data set
-v$name <- c( v$variable[1:10], "storiesNOW", "storiesLATE", "wm", "vs_perc", "orient","ToM_nbd", v$variable[17:30],"ToM_sum" )
+v$name <- c(v$variable[1:26], "storiesNOW", "storiesLATE", "wm", "vs_perc", "orient","ToM_nbd", v$variable[33:46],"ToM_sum")
 
 # keep only relevant rows
 d3 <- d2[ , c( 1:4, which( colnames(d2) %in% v$variable ) ) ]
@@ -258,7 +277,8 @@ v$variable <- v$name
 v$type <- "cont"
 v <- v[ , c(1,4,2) ]
 v <- rbind.data.frame( c("sex", "Pohlaví (dívky/chlapci)", "cat" ), c("vek_roky", "Věk (roky)", "cont" ), v )
-v$data_set <- c( rep(NA,2), rep("both",8), rep("Data set #2",8), rep("Data set #1",15) )
+v$data_set <- c( rep(NA,2), rep("both",24), rep("Data set #1",8), rep("Data set #2",15) )
+v$analysis <- c( rep(NA,2), rep(c( rep(NA,4), rep("selection",2) ), 4), rep("selection",8), rep("validation",10), NA, "validation", NA, rep("validation",2) )
 
 
 # SAVE THE RESULTS ----

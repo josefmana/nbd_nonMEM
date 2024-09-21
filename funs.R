@@ -6,6 +6,9 @@ library(tidyverse)
 
 # SUMMARIES  ----
 
+# sapply with unlisting
+usapply <- function(x, f) unlist(sapply(x, f), use.names = F)
+
 # takes any number and prints it as a character with specified number of decimals
 rprint <- function(x, dec = 2) sprintf( paste0( "%.", dec, "f" ), round( x , dec ) )
 

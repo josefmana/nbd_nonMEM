@@ -111,5 +111,13 @@ fig_B <- dag1 %>%
   theme(legend.position = "none")
 
 # put them together
-(fig_A / fig_B) + plot_annotation(tag_levels = "A")
+(fig_A / fig_B) + plot_annotation( tag_levels = "A", theme = theme( plot.tag = element_text(face = "bold") ) )
 
+# save it
+ggsave(
+  plot = last_plot(),
+  filename = here("figs","nomologic_net.jpg"),
+  dpi = 300,
+  width = 9,
+  height = 9
+)

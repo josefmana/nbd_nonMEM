@@ -89,22 +89,15 @@ dag1 <- dagify(
 # plot it
 fig_B <- dag1 %>%
   
-  mutate(
-    latent = if_else(is.na(direction), "0", "1"),
-    NBD_node = if_else(name == "NBD", "0", "1"),
-    NBD_edge = if_else(to == "NBD", "0", "1")
-  ) %>%
-  
+  mutate( latent = if_else(is.na(direction), "0", "1") ) %>%
   ggplot() +
-  aes(x = x, y = y, xend = xend, yend = yend, shape = latent, colour = NBD_node) +
-  geom_dag_point( size = 20 ) +
-  geom_dag_edges( aes(edge_colour = NBD_edge) ) +
-  scale_edge_colour_manual( values = c(`1` = "black", `0` = "red2") ) +
-  scale_colour_manual( values = c("black","grey87") ) +
+  aes(x = x, y = y, xend = xend, yend = yend, shape = latent) +
+  geom_dag_point(size = 20, colour =  "grey87") +
+  geom_dag_edges() +
   scale_shape_manual( values = c(`1` = 19, `0` = 15) ) +
   geom_dag_text(
     label = arrange(nms, name)$name,
-    colour = arrange(nms, name)$col,
+    colour = "black",
     size = 3.6
   ) +
   theme_dag() +

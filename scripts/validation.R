@@ -61,7 +61,8 @@ write.table(x = tab1, file = here("tabs","data_description.csv"), sep = ";", row
 ## ---- HISTOGRAM OF AGE ----
 
 # prepare file for plotting
-jpeg(filename = here("figs","age_distribution.jpg"), width = 7, height = 8, units = "in", quality = 100, res = 300)
+#png(filename = here("figs","age_distribution.png"), width = 7, height = 8, units = "in", res = 300, type = "cairo")
+png(filename = here("figs","Obrázek A1.png"), width = 7, height = 8, units = "in", res = 300, type = "cairo")
 
 # prepare grid
 par( mfrow = c(2,1) )
@@ -192,7 +193,7 @@ write.table(x = tab2, file = here("tabs","scoring_selection.csv"), sep = ";", ro
 ### ---- plot it ----
 
 # prepare file for plotting
-jpeg(filename = here("figs","scoring_selection.jpg"), width = 8, height = 8, units = "in", quality = 100, res = 300)
+png(filename = here("figs","scoring_selection.png"), width = 8, height = 8, units = "in", res = 300, type = "cairo")
 
 # plotting proper
 cp0 <- tab2 %>%
@@ -262,7 +263,8 @@ write.table(x = tab3, file = here("tabs","scoring_validation.csv"), sep = ";", r
 ### ---- plot it ----
 
 # prepare file for plotting
-jpeg(filename = here("figs","scoring_validation.jpg"), width = 10.5, height = 10.5, units = "in", quality = 100, res = 300)
+#png(filename = here("figs","scoring_validation.png"), width = 10.5, height = 10.5, units = "in", res = 300, type = "cairo")
+png(filename = here("figs","Obrázek 1.png"), width = 10.5, height = 10.5, units = "in", res = 300, type = "cairo")
 
 # plotting proper
 cp1 <- pcorr[[2]]$r[v2$variable, v2$variable] %>%
@@ -312,7 +314,8 @@ labs <-
 ### ---- younger children ----
 
 # prepare a file
-jpeg(filename = here("figs","ceiling_sums_younger.jpg"), width = 8, height = 10, units = "in", quality = 100, res = 300)
+#png(filename = here("figs","ceiling_sums_younger.png"), width = 8, height = 10, units = "in", res = 300, type = "cairo")
+png(filename = here("figs","Obrázek A2.png"), width = 8, height = 10, units = "in", res = 300, type = "cairo")
 
 # prepare a grid
 par( mfrow = c(3,2) )
@@ -342,7 +345,8 @@ dev.off()
 ### ---- older children ----
 
 # prepare a file
-jpeg(filename = here("figs","ceiling_sums_older.jpg"), width = 8, height = 10, units = "in", quality = 100, res = 300)
+#png(filename = here("figs","ceiling_sums_older.png"), width = 8, height = 10, units = "in", res = 300, type = "cairo")
+png(filename = here("figs","Obrázek A3.png"), width = 8, height = 10, units = "in", res = 300, type = "cairo")
 
 # prepare a grid
 par( mfrow = c(3,2) )
@@ -374,7 +378,8 @@ dev.off()
 ### ---- younger children ----
 
 # prepare a file
-jpeg(filename = here("figs","ceiling_trials_younger.jpg"), width = 6, height = 10, units = "in", quality = 100, res = 300)
+#png(filename = here("figs","ceiling_trials_younger.png"), width = 6, height = 10, units = "in", res = 300, type = "cairo")
+png(filename = here("figs","Obrázek A4.png"), width = 6, height = 10, units = "in", res = 300, type = "cairo")
 
 # prepare a grid
 par( mfrow = c(4,2) )
@@ -404,7 +409,8 @@ dev.off()
 ### ---- older children ----
 
 # prepare a file
-jpeg(filename = here("figs","ceiling_trials_older.jpg"), width = 6, height = 10, units = "in", quality = 100, res = 300)
+#png(filename = here("figs","ceiling_trials_older.png"), width = 6, height = 10, units = "in", res = 300, type = "cairo")
+png(filename = here("figs","Obrázek A5.png"), width = 6, height = 10, units = "in", res = 300, type = "cairo")
 
 # prepare a grid
 par( mfrow = c(4,2) )

@@ -24,7 +24,7 @@ nms <-
 
 # PRE-RESULTS ----
 
-# prepare the DAG
+# prepare the DAG
 dag0 <- dagify(
 
   NBD ~ N + V + M + E + J + S,
@@ -109,7 +109,8 @@ fig_B <- dag1 %>%
 # save it
 ggsave(
   plot = last_plot(),
-  filename = here("figs","nomologic_net.jpg"),
+  #filename = here("figs","nomologic_net.png"),
+  filename = here("figs","Obrázek 2.png"),
   dpi = 300,
   width = 9,
   height = 9

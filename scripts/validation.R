@@ -279,15 +279,16 @@ cp1 <- pcorr[[2]]$r[v2$variable, v2$variable] %>%
     insig = "blank",
     tl.srt = 45,
     tl.col = "black",
-    number.digits = 2,
-    addCoef.col = "white",
+    #number.digits = 2,
+    #addCoef.col = "white",
     addgrid.col = "grey",
     col = COL2("PRGn", 10),
     diag = F
   )
 
-# add correlation estimates for p > .05 cases
-with( subset(cp1$corrPos, p.value > .05), text( x, y, round(corr,2), cex = .8 ) )
+# add correlation estimates
+with( subset(cp1$corrPos, p.value <= .05), text( x, y, sub(".", ",", sprintf("%.2f", round(corr,2)), fixed = T), cex = .8, col = "white", font = 2 ) )
+with( subset(cp1$corrPos, p.value > .05), text( x, y, sub(".", ",", sprintf("%.2f", round(corr,2)), fixed = T), cex = .8 ) )
 
 # finish it
 dev.off()
